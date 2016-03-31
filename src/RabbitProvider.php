@@ -11,7 +11,7 @@ namespace Gua;
 
 use Illuminate\Support\ServiceProvider;
 
-class RabbitProvider extends ServiceProvider{
+class RabbitProvider extends ServiceProvider {
 
     protected $defer = true;
 
@@ -21,6 +21,13 @@ class RabbitProvider extends ServiceProvider{
      * @return void
      */
     public function register() {
+        $this->mergeConfigFrom(dirname(__DIR__).'/config/rabbit.php','rabbit');
+        $this->app->singleton('rabbit.publisher', function ($app) {
+            return Publisher::with($app->config['rabbit']);
+        });
+        $this->app->singleton('rabbit.consumer', function ($app) {
+            return Consumer::with($app->config['rabbit']);
+        });
     }
 
     public function boot() {
@@ -33,8 +40,13 @@ class RabbitProvider extends ServiceProvider{
      *
      * @return string
      */
-    protected function getConfigPath()
-    {
+    protected function getConfigPath() {
         return config_path('rabbit.php');
     }
+
+    public function provides() {
+        return ['rabbit.consumer','rabbit.publisher'];
+    }
+
+
 }
