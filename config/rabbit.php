@@ -8,7 +8,7 @@
 
 return [
     'connection' => [
-        'host' => '127.0.0.1',
+        'host' => '10.216.90.231',
         'port' => 5672,
         'user' => 'guest',
         'password' => 'guest',
