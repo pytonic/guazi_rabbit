@@ -1,5 +1,4 @@
 <?php
-use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 /**
  * Created by PhpStorm.
