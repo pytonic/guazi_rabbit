@@ -17,7 +17,7 @@ class Consumer extends AMQP {
         if (!empty($exchange)) {
             $this->exchange($exchange);
         }
-        if (empty($topics) && !empty($exchange)) {
+        if (!empty($topics) && !empty($exchange)) {
             foreach ($topics as $binding_key) {
                 $this->channel->queue_bind($this->queue, $exchange, $binding_key);
             }

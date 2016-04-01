@@ -55,11 +55,11 @@ class AMQP {
     /**
      * @param $name string 如果$name为''，只能创建非持久化的队列并且只能绑定到Connection，队列的名称在每次创建的时候随机生成。
      * @return static
-     * @throws \AMQPQueueException
+     * @throws AMQPQueueException
      */
     public function queue($name) {
         if (is_null($name)) {
-            throw new \AMQPQueueException('queue cannot be null');
+            throw new AMQPQueueException('queue cannot be null');
         }
         list($queue_name, ,) = $this->channel->queue_declare(
             $name,
@@ -78,11 +78,11 @@ class AMQP {
     /**
      * @param $exchange string 默认为''，这个是默认的交换器，会绑定所有的队列，并且以队列的名称作为路由。
      * @return static
-     * @throws \AMQPQueueException
+     * @throws AMQPQueueException
      */
     public function exchange($exchange = '') {
         if (is_null($exchange)) {
-            throw new \AMQPQueueException('exchange cannot be null');
+            throw new AMQPQueueException('exchange cannot be null');
         }
         $this->exchange = $exchange;
         $this->channel->exchange_declare(
