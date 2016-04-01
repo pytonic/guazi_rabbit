@@ -14,12 +14,14 @@ use PhpAmqpLib\Message\AMQPMessage;
 class Consumer extends AMQP {
 
     public function consume($exchange, $topics = null, callable $back = null) {
-        $this->exchange($exchange);
-        if (empty($topics)) {
+        if (!empty($exchange)) {
+            $this->exchange($exchange);
+        }
+        if (empty($topics) && !empty($exchange)) {
             foreach ($topics as $binding_key) {
                 $this->channel->queue_bind($this->queue, $exchange, $binding_key);
             }
-        } else {
+        } elseif (!empty($exchange)) {
             $this->channel->queue_bind($this->queue, $exchange);
         }
         $this->channel->basic_qos(null, 1, null);
