@@ -17,9 +17,13 @@ class Consumer extends AMQP {
         $this->channel->queue_bind($this->queue, $exchange);
         $this->channel->basic_qos(null, 1, null);
         $callback = function (AMQPMessage $message) use ($back) {
-            echo $message->body;
-            $back($message->getBody());
-            $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
+            try {
+                $back($message->getBody(),$message);
+                $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
+            } catch (\Exception $e) {
+                $this->close();
+                throw $e;
+            }
         };
         $this->channel->basic_consume($this->queue, '', false, false, false, false, $callback);
         while (count($this->channel->callbacks)) {

@@ -68,10 +68,13 @@ class AMQP {
         return $this;
     }
 
-
-    function __destruct() {
+    public function close() {
         $this->channel->close();
         $this->connection->close();
+    }
+
+    function __destruct() {
+        $this->close();
     }
 
 }
