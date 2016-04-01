@@ -17,20 +17,16 @@ class ConsumerTest extends TestCase{
     public function setUp() {
         $this->config = include dirname(__DIR__).'/config/rabbit.php';
         $this->consumer = \Gua\Consumer::with($this->config);
+        define('AMQP_DEBUG',true);
     }
-
-//    public function testClient() {
-//        $this->consumer->queue('console')->consume('payments',function($message,\PhpAmqpLib\Message\AMQPMessage $amqpMessage){
-//            echo $message;
-//        });
-//    }
 
     public function testConsumerWithException() {
         try{
 
-            $this->consumer->queue('')->consume('test',null,function($message){
-                echo $message;
-//                throw  new Exception('1');
+            $this->consumer->queue('contract_payments')->consume('payments',['payment_ok'],function(\Gua\Message $message){
+                echo $message->body;
+                $message->ack();
+                throw  new Exception('1');
             });
         }catch(Exception $e){
             $this->assertTrue(true);

@@ -10,7 +10,7 @@ namespace Gua;
 class Publisher extends AMQP{
 
     public function publish(Message $message, $routingKey = '') {
-        $this->channel->basic_publish($message, $this->exchange, $routingKey);
+        $this->channel->basic_publish($message->getOriginal(), $this->exchange, $routingKey);
     }
 
 }

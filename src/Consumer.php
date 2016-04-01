@@ -27,14 +27,23 @@ class Consumer extends AMQP {
         $this->channel->basic_qos(null, 1, null);
         $callback = function (AMQPMessage $message) use ($back) {
             try {
-                $back($message->getBody(), $message);
-                $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
+                $msg = new Message();
+                $msg->copy($message);
+                $back($msg);
             } catch (\Exception $e) {
                 $this->close();
                 throw $e;
             }
         };
-        $this->channel->basic_consume($this->queue, '', false, false, false, false, $callback);
+        $this->channel->basic_consume(
+            $this->queue,
+            '',
+            $no_local = false,
+            $no_ack = false,/*需要确认消费*/
+            false,
+            false,
+            $callback
+        );
         while (count($this->channel->callbacks)) {
             $this->channel->wait();
         }

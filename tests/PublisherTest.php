@@ -27,7 +27,7 @@ class PublisherTest extends TestCase {
             'message'=>'hello world'
         ];
         $message = new \Gua\Message(json_encode($data));
-        $publisher->exchange(self::EXCHANGE)->publish($message,'consoles');
+        $publisher->exchange(self::EXCHANGE)->publish($message,'payment_ok');
         echo $t1-$t0.PHP_EOL;
         echo microtime(true)-$t1.PHP_EOL;
 
