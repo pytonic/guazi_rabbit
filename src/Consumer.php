@@ -13,12 +13,19 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class Consumer extends AMQP {
 
-    public function consume($exchange, callable $back) {
-        $this->channel->queue_bind($this->queue, $exchange);
+    public function consume($exchange, $topics = null, callable $back = null) {
+        $this->exchange($exchange);
+        if (empty($topics)) {
+            foreach ($topics as $binding_key) {
+                $this->channel->queue_bind($this->queue, $exchange, $binding_key);
+            }
+        } else {
+            $this->channel->queue_bind($this->queue, $exchange);
+        }
         $this->channel->basic_qos(null, 1, null);
         $callback = function (AMQPMessage $message) use ($back) {
             try {
-                $back($message->getBody(),$message);
+                $back($message->getBody(), $message);
                 $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
             } catch (\Exception $e) {
                 $this->close();

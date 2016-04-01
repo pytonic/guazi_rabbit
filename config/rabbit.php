@@ -15,7 +15,6 @@ return [
     ],
 
     'exchange' => [
-        'name' => '',
         'type' => 'fanout',
         'passive' => false,
         'durable' => true,
@@ -26,10 +25,9 @@ return [
         'ticket' => null,
     ],
     'queue' => [
-        'name' => 'default',
         'passive' => false,
         'durable' => true,
-        'exclusive' => false,
+        'exclusive' => false,//是否绑定到Connection
         'auto_delete' => false,
         'no_wait' => false,
         'arguments' => null,

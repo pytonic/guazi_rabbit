@@ -28,7 +28,7 @@ class ConsumerTest extends TestCase{
     public function testConsumerWithException() {
         try{
 
-            $this->consumer->queue('console')->consume('payments',function($message){
+            $this->consumer->queue('')->consume('payments',function($message){
                 echo $message;
                 throw  new Exception('1');
             });
